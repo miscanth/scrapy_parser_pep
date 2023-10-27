@@ -7,6 +7,10 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
+from pathlib import Path
+import time
+
+
 BOT_NAME = 'pep_parse'
 
 NEWSPIDER_MODULE = 'pep_parse.spiders'
@@ -104,4 +108,9 @@ FEED_EXPORT_FIELDS = {
     'status': 'Статус',
 }
 
-ITEM_PIPELINES = {'pep_parse.pipelines.PepParsePipeline': 300 }
+ITEM_PIPELINES = {'pep_parse.pipelines.PepParsePipeline': 300}
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+NAME_RESULT_DIR = 'results'
+DATE_TIME = time.strftime('%Y-%m-%d_%H-%M-%S')
+FILE_NAME = f'status_summary_{DATE_TIME}.csv'
