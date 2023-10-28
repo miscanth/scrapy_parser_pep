@@ -13,14 +13,14 @@ class PepSpider(scrapy.Spider):
         tbody_tag = section_tag.css('tbody tr')
         for tr_tag in tbody_tag:
             pep_link = tr_tag.css('a')[0]
-            yield response.follow(pep_link, callback=self.parse_pep)
+            pep_name = tr_tag.css('a::text')[1].get()
+            yield response.follow(
+                pep_link, callback=self.parse_pep, meta={'name': pep_name})
 
     def parse_pep(self, response):
         number = response.css(
             'ul.breadcrumbs li')[2].css('li::text').get().replace('PEP ', '')
-        name = ' '.join(name.strip() for name in response.xpath(
-            '//h1[@class="page-title"]//text()'
-        ).getall()).strip().replace(f'PEP {number} – ', '')
+        name = response.meta.get('name')
         status = response.css('dt:contains("Status") + dd abbr::text').get()
         data = {
             'number': number,
